@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/bin
+/build
+/toolchain/Windows/Tools/llvm-objdump.exe
+/toolchain/Windows/Tools/llvm-mc.exe
+/toolchain/Windows/Tools/llvm-link.exe
+/toolchain/Windows/Tools/llc.exe
+/toolchain/Windows/Tools/flasm.exe
+/toolchain/Windows/Tools/clang.exe
