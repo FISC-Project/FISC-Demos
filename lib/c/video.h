@@ -16,6 +16,16 @@ typedef struct {
 
 static uint32_t video_render_counter __data = 0;
 
+bool video_is_enabled()
+{
+	return io->VGA.status & 2;
+}
+
+bool video_is_init()
+{
+	return io->VGA.status & 4;
+}
+
 void initialize_video()
 {
 	io->VGA.enDev = 1;
@@ -24,13 +34,7 @@ void initialize_video()
 	io->VGA.px_access_width = 0;
 	io->VGA.px_render = 0;
 
-	for(int i=0;i<11000;i++)
-		for(int j=0;j<10;j++);
-}
-
-bool video_is_on()
-{
-	return io->VGA.status & 2;
+	while(!video_is_init());
 }
 
 void video_backend_setaddress(uint16_t x, uint16_t y)

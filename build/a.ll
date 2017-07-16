@@ -272,9 +272,31 @@ define i8* @memset(i8* %dst, i32 %val, i32 %len) #0 {
 }
 
 ; Function Attrs: nounwind
+define signext i8 @video_is_enabled() #0 {
+  %1 = load %struct.IO*, %struct.IO** @io, align 4
+  %2 = getelementptr inbounds %struct.IO, %struct.IO* %1, i32 0, i32 2
+  %3 = getelementptr inbounds %struct.anon.1, %struct.anon.1* %2, i32 0, i32 1
+  %4 = load i8, i8* %3, align 1
+  %5 = sext i8 %4 to i32
+  %6 = and i32 %5, 2
+  %7 = trunc i32 %6 to i8
+  ret i8 %7
+}
+
+; Function Attrs: nounwind
+define signext i8 @video_is_init() #0 {
+  %1 = load %struct.IO*, %struct.IO** @io, align 4
+  %2 = getelementptr inbounds %struct.IO, %struct.IO* %1, i32 0, i32 2
+  %3 = getelementptr inbounds %struct.anon.1, %struct.anon.1* %2, i32 0, i32 1
+  %4 = load i8, i8* %3, align 1
+  %5 = sext i8 %4 to i32
+  %6 = and i32 %5, 4
+  %7 = trunc i32 %6 to i8
+  ret i8 %7
+}
+
+; Function Attrs: nounwind
 define void @initialize_video() #0 {
-  %i = alloca i32, align 4
-  %j = alloca i32, align 4
   %1 = load %struct.IO*, %struct.IO** @io, align 4
   %2 = getelementptr inbounds %struct.IO, %struct.IO* %1, i32 0, i32 2
   %3 = getelementptr inbounds %struct.anon.1, %struct.anon.1* %2, i32 0, i32 0
@@ -295,55 +317,19 @@ define void @initialize_video() #0 {
   %14 = getelementptr inbounds %struct.IO, %struct.IO* %13, i32 0, i32 2
   %15 = getelementptr inbounds %struct.anon.1, %struct.anon.1* %14, i32 0, i32 5
   store i8 0, i8* %15, align 1
-  store i32 0, i32* %i, align 4
   br label %16
 
-; <label>:16                                      ; preds = %28, %0
-  %17 = load i32, i32* %i, align 4
-  %18 = icmp slt i32 %17, 11000
-  br i1 %18, label %19, label %31
+; <label>:16                                      ; preds = %20, %0
+  %17 = call signext i8 @video_is_init() #2
+  %18 = icmp ne i8 %17, 0
+  %19 = xor i1 %18, true
+  br i1 %19, label %20, label %21
 
-; <label>:19                                      ; preds = %16
-  store i32 0, i32* %j, align 4
-  br label %20
-
-; <label>:20                                      ; preds = %24, %19
-  %21 = load i32, i32* %j, align 4
-  %22 = icmp slt i32 %21, 10
-  br i1 %22, label %23, label %27
-
-; <label>:23                                      ; preds = %20
-  br label %24
-
-; <label>:24                                      ; preds = %23
-  %25 = load i32, i32* %j, align 4
-  %26 = add nsw i32 %25, 1
-  store i32 %26, i32* %j, align 4
-  br label %20
-
-; <label>:27                                      ; preds = %20
-  br label %28
-
-; <label>:28                                      ; preds = %27
-  %29 = load i32, i32* %i, align 4
-  %30 = add nsw i32 %29, 1
-  store i32 %30, i32* %i, align 4
+; <label>:20                                      ; preds = %16
   br label %16
 
-; <label>:31                                      ; preds = %16
+; <label>:21                                      ; preds = %16
   ret void
-}
-
-; Function Attrs: nounwind
-define signext i8 @video_is_on() #0 {
-  %1 = load %struct.IO*, %struct.IO** @io, align 4
-  %2 = getelementptr inbounds %struct.IO, %struct.IO* %1, i32 0, i32 2
-  %3 = getelementptr inbounds %struct.anon.1, %struct.anon.1* %2, i32 0, i32 1
-  %4 = load i8, i8* %3, align 1
-  %5 = sext i8 %4 to i32
-  %6 = and i32 %5, 2
-  %7 = trunc i32 %6 to i8
-  ret i8 %7
 }
 
 ; Function Attrs: nounwind
@@ -779,7 +765,7 @@ define void @video_test() #0 {
   %1 = load i16, i16* @video_y, align 2
   %2 = zext i16 %1 to i32
   %3 = icmp slt i32 %2, 600
-  br i1 %3, label %4, label %70
+  br i1 %3, label %4, label %77
 
 ; <label>:4                                       ; preds = %0
   %5 = load i16, i16* @video_x, align 2
@@ -814,7 +800,7 @@ define void @video_test() #0 {
   %21 = load i16, i16* @video_x, align 2
   %22 = zext i16 %21 to i32
   %23 = icmp sgt i32 %22, 800
-  br i1 %23, label %24, label %69
+  br i1 %23, label %24, label %76
 
 ; <label>:24                                      ; preds = %16
   store i16 0, i16* @video_x, align 2
@@ -834,7 +820,7 @@ define void @video_test() #0 {
   %36 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %35, i32 0, i32 1
   %37 = load i8, i8* %36, align 1
   %38 = zext i8 %37 to i32
-  %39 = add nsw i32 %38, 2
+  %39 = sub nsw i32 %38, 2
   %40 = trunc i32 %39 to i8
   store i8 %40, i8* %36, align 1
   %41 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
@@ -842,40 +828,52 @@ define void @video_test() #0 {
   %43 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %42, i32 0, i32 2
   %44 = load i8, i8* %43, align 1
   %45 = zext i8 %44 to i32
-  %46 = add nsw i32 %45, 3
+  %46 = add nsw i32 %45, 1
   %47 = trunc i32 %46 to i8
   store i8 %47, i8* %43, align 1
   %48 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
-  %49 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %48, i32 0, i32 1
-  %50 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %49, i32 0, i32 0
+  %49 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %48, i32 0, i32 0
+  %50 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %49, i32 0, i32 2
   %51 = load i8, i8* %50, align 1
   %52 = zext i8 %51 to i32
-  %53 = add nsw i32 %52, 1
+  %53 = mul nsw i32 %52, 3
   %54 = trunc i32 %53 to i8
   store i8 %54, i8* %50, align 1
   %55 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %56 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %55, i32 0, i32 1
-  %57 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %56, i32 0, i32 1
+  %57 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %56, i32 0, i32 0
   %58 = load i8, i8* %57, align 1
   %59 = zext i8 %58 to i32
-  %60 = add nsw i32 %59, 2
+  %60 = add nsw i32 %59, 1
   %61 = trunc i32 %60 to i8
   store i8 %61, i8* %57, align 1
   %62 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %63 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %62, i32 0, i32 1
-  %64 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %63, i32 0, i32 2
+  %64 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %63, i32 0, i32 1
   %65 = load i8, i8* %64, align 1
   %66 = zext i8 %65 to i32
-  %67 = add nsw i32 %66, 3
+  %67 = add nsw i32 %66, 2
   %68 = trunc i32 %67 to i8
   store i8 %68, i8* %64, align 1
-  br label %69
+  %69 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
+  %70 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %69, i32 0, i32 1
+  %71 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %70, i32 0, i32 2
+  %72 = load i8, i8* %71, align 1
+  %73 = zext i8 %72 to i32
+  %74 = add nsw i32 %73, 3
+  %75 = trunc i32 %74 to i8
+  store i8 %75, i8* %71, align 1
+  br label %76
 
-; <label>:69                                      ; preds = %24, %16
+; <label>:76                                      ; preds = %24, %16
   call void @video_backend_render_block(i32 50) #2
-  br label %70
+  br label %78
 
-; <label>:70                                      ; preds = %69, %0
+; <label>:77                                      ; preds = %0
+  call void @video_backend_render_block(i32 0) #2
+  br label %78
+
+; <label>:78                                      ; preds = %77, %76
   ret void
 }
 
@@ -887,7 +885,7 @@ define void @start() #0 {
   br label %1
 
 ; <label>:1                                       ; preds = %16, %0
-  %2 = call signext i8 @video_is_on() #2
+  %2 = call signext i8 @video_is_enabled() #2
   %3 = icmp ne i8 %2, 0
   br i1 %3, label %5, label %4
 

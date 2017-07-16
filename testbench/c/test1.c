@@ -143,8 +143,9 @@ void video_test()
 			video_y++;
 
 			rgbs->rgb1.r += 1;
-			rgbs->rgb1.g += 2;
-			rgbs->rgb1.b += 3;
+			rgbs->rgb1.g -= 2;
+			rgbs->rgb1.b += 1;
+			rgbs->rgb1.b *= 3;
 
 			rgbs->rgb2.r += 1;
 			rgbs->rgb2.g += 2;
@@ -152,6 +153,8 @@ void video_test()
 		}
 		
 		video_backend_render_block(50);
+	} else {
+		video_backend_render_block(0);
 	}
 }
 
@@ -165,7 +168,7 @@ void start()
 	sprintf(buff, "Text: %s", "formatted");*/
 
 	while(1) {
-		if(!video_is_on())
+		if(!video_is_enabled())
 			break;
 
 		video_test();
