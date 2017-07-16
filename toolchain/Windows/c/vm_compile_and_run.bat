@@ -4,6 +4,7 @@
 
 
 @rm build/*.ll
+@rm build/*.s
 @rm bin/*.o
 
 @toolchain\Windows\Tools\clang -Werror=implicit-function-declaration -fwritable-strings -nostdlib -nostdinc -ffreestanding -fno-builtin -target fisc-unknown-unknown -Ilib\c -S lib\c\entry.c -emit-llvm -o build\entry.ll
@@ -20,3 +21,5 @@
 
 
 @toolchain\Windows\Tools\fvm -t FISC -d --nodbgexec --dump reg -c -b bin\a.o
+
+@CD "%~dp0"

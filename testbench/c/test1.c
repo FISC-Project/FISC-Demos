@@ -123,20 +123,60 @@ int sprintf(char * buf, const char *fmt, ...) {
 	return out;
 }
 
+static uint16_t video_x __data = 0;
+static uint16_t video_y __data = 0;
+static uint64_t video_colorinfo __data = 0;
+
+void video_test()
+{
+	rgbpack_t * rgbs = (rgbpack_t*)&video_colorinfo;
+	if(video_y < VIDEO_HEIGHT) {
+		video_backend_setaddress(video_x, video_y);
+
+		for(int i = 0; i < VIDEO_PIXEL_CHANNEL_COUNT; i++)
+			video_pixels_pack(i, rgbs);
+
+		video_x += VIDEO_PIXEL_CHANNEL_COUNT * 2;
+
+		if(video_x > VIDEO_WIDTH) {
+			video_x = 0;
+			video_y++;
+
+			rgbs->rgb1.r += 1;
+			rgbs->rgb1.g += 2;
+			rgbs->rgb1.b += 3;
+
+			rgbs->rgb2.r += 1;
+			rgbs->rgb2.g += 2;
+			rgbs->rgb2.b += 3;
+		}
+		
+		video_backend_render_block(50);
+	}
+}
+
 void start()
 {
 	welcome();
-	puts("\nPress the 'q' key to quit\n");
+	puts("\nAvailable Options:\nq- Quit\n\n");
 
-	static char buff[10] __data;
+	/*static char buff[10] __data;
 	FIXSTACK;
-	sprintf(buff, "Text: %s", "formatted");
-	
+	sprintf(buff, "Text: %s", "formatted");*/
+
 	while(1) {
-		char ch = getch();
-		if(ch == 'q')
+		if(!video_is_on())
 			break;
-		putc(ch);
+
+		video_test();
+
+		if(kbhit())
+		{
+			char ch = getch_async();
+			if(ch == 'q')
+				break;
+			putc(ch);
+		}
 	}
 
 	goodbye();

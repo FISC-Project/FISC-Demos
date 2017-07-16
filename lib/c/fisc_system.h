@@ -1,6 +1,8 @@
 #ifndef FISC_SYSTEM_H_
 #define FISC_SYSTEM_H_
 
+#include "video.h"
+
 void initialize_stdout()
 {
 	/* Enable device first */
@@ -29,8 +31,9 @@ void enable_timer()
 void initialize_fisc_machine()
 {	
 	/* Enable standard I/O streams */
-	initialize_stdout(); /* Output */
-	initialize_stdin();  /* Input */
+	initialize_stdout(); /* Output        */
+	initialize_stdin();  /* Input         */
+	initialize_video();	 /* Video Display */
 
 	/* Finally, enable the timer for triggering CPU interrupts */
 	//enable_timer();

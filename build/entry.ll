@@ -1,14 +1,13 @@
 ; ModuleID = 'lib\c\entry.c'
-target datalayout = "E-p:32:32-i1:8:64-i8:8:64-i16:16:64-i32:32:64-f64:64-a:0:64-n64"
+target datalayout = "E-p:64:64:64-i1:8:64-i8:8:64-i16:16:64-i32:32:64-f64:64-a:0:64-n64"
 target triple = "fisc-unknown-unknown"
 
 ; Function Attrs: nounwind
 define i32 @main(i32 %argc, i8** %argv) #0 {
-entry:
-  %argc.addr = alloca i32, align 4
-  %argv.addr = alloca i8**, align 4
-  store i32 %argc, i32* %argc.addr, align 4
-  store i8** %argv, i8*** %argv.addr, align 4
+  %1 = alloca i32, align 4
+  %2 = alloca i8**, align 4
+  store i32 %argc, i32* %1, align 4
+  store i8** %argv, i8*** %2, align 4
   call void bitcast (void (...)* @start to void ()*)() #2
   call void asm sideeffect "bl 0", ""() #3, !srcloc !1
   ret i32 0

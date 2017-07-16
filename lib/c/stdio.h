@@ -47,7 +47,7 @@ char getch_async()
 }
 
 #define DEBUGLOC 0x10000
-#define DEBUG(loc, intnum) (((uint32_t*)DEBUGLOC)[(loc)] = ((uint32_t)(intnum)))
+#define DEBUG(loc, integer) (((uint32_t*)DEBUGLOC)[(loc)] = ((uint32_t)(integer)))
 #define DEBUGLIST(listsize, list) for(size_t _i_ = 0; _i_ < ((size_t)(listsize)); _i_++) DEBUG(_i_, ((uint32_t*)(list)[_i_]));
 #define DEBUGLISTOFF(offset, listsize, list) for(size_t _i_ = ((size_t)(offset)); _i_ < ((size_t)(offset)) + ((size_t)(listsize)); _i_++) DEBUG(_i_, ((uint32_t*)(list)[_i_ - ((size_t)(offset))]));
 
