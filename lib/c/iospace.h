@@ -3,9 +3,9 @@
 
 #include "stdint.h"
 
-#define IOSPACE 0x5000
-
 #define VIDEO_PIXEL_CHANNEL_COUNT 50
+
+#define IOSPACE 0x5000
 
 typedef struct IO {
 	struct __packed {

@@ -142,17 +142,20 @@ void video_test()
 			video_x = 0;
 			video_y++;
 
-			rgbs->rgb1.r += 1;
+			
 			rgbs->rgb1.g -= 2;
 			rgbs->rgb1.b += 1;
 			rgbs->rgb1.b *= 3;
 
-			rgbs->rgb2.r += 1;
-			rgbs->rgb2.g += 2;
-			rgbs->rgb2.b += 3;
+			rgbs->rgb2.r += rgbs->rgb1.b;
+			rgbs->rgb2.g += 1;
+			
 		}
 		
-		video_backend_render_block(50);
+		rgbs->rgb1.r += 10;
+		rgbs->rgb2.b += rgbs->rgb1.b + rgbs->rgb1.g * 3;
+		
+		video_backend_render_block(40);
 	} else {
 		video_backend_render_block(0);
 	}

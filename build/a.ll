@@ -765,7 +765,7 @@ define void @video_test() #0 {
   %1 = load i16, i16* @video_y, align 2
   %2 = zext i16 %1 to i32
   %3 = icmp slt i32 %2, 600
-  br i1 %3, label %4, label %77
+  br i1 %3, label %4, label %94
 
 ; <label>:4                                       ; preds = %0
   %5 = load i16, i16* @video_x, align 2
@@ -800,7 +800,7 @@ define void @video_test() #0 {
   %21 = load i16, i16* @video_x, align 2
   %22 = zext i16 %21 to i32
   %23 = icmp sgt i32 %22, 800
-  br i1 %23, label %24, label %76
+  br i1 %23, label %24, label %67
 
 ; <label>:24                                      ; preds = %16
   store i16 0, i16* @video_x, align 2
@@ -809,18 +809,18 @@ define void @video_test() #0 {
   store i16 %26, i16* @video_y, align 2
   %27 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %28 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %27, i32 0, i32 0
-  %29 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %28, i32 0, i32 0
+  %29 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %28, i32 0, i32 1
   %30 = load i8, i8* %29, align 1
   %31 = zext i8 %30 to i32
-  %32 = add nsw i32 %31, 1
+  %32 = sub nsw i32 %31, 2
   %33 = trunc i32 %32 to i8
   store i8 %33, i8* %29, align 1
   %34 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %35 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %34, i32 0, i32 0
-  %36 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %35, i32 0, i32 1
+  %36 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %35, i32 0, i32 2
   %37 = load i8, i8* %36, align 1
   %38 = zext i8 %37 to i32
-  %39 = sub nsw i32 %38, 2
+  %39 = add nsw i32 %38, 1
   %40 = trunc i32 %39 to i8
   store i8 %40, i8* %36, align 1
   %41 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
@@ -828,7 +828,7 @@ define void @video_test() #0 {
   %43 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %42, i32 0, i32 2
   %44 = load i8, i8* %43, align 1
   %45 = zext i8 %44 to i32
-  %46 = add nsw i32 %45, 1
+  %46 = mul nsw i32 %45, 3
   %47 = trunc i32 %46 to i8
   store i8 %47, i8* %43, align 1
   %48 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
@@ -836,44 +836,61 @@ define void @video_test() #0 {
   %50 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %49, i32 0, i32 2
   %51 = load i8, i8* %50, align 1
   %52 = zext i8 %51 to i32
-  %53 = mul nsw i32 %52, 3
-  %54 = trunc i32 %53 to i8
-  store i8 %54, i8* %50, align 1
-  %55 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
-  %56 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %55, i32 0, i32 1
-  %57 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %56, i32 0, i32 0
-  %58 = load i8, i8* %57, align 1
-  %59 = zext i8 %58 to i32
-  %60 = add nsw i32 %59, 1
-  %61 = trunc i32 %60 to i8
-  store i8 %61, i8* %57, align 1
-  %62 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
-  %63 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %62, i32 0, i32 1
-  %64 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %63, i32 0, i32 1
-  %65 = load i8, i8* %64, align 1
-  %66 = zext i8 %65 to i32
-  %67 = add nsw i32 %66, 2
-  %68 = trunc i32 %67 to i8
-  store i8 %68, i8* %64, align 1
-  %69 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
-  %70 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %69, i32 0, i32 1
-  %71 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %70, i32 0, i32 2
-  %72 = load i8, i8* %71, align 1
-  %73 = zext i8 %72 to i32
-  %74 = add nsw i32 %73, 3
-  %75 = trunc i32 %74 to i8
-  store i8 %75, i8* %71, align 1
-  br label %76
+  %53 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
+  %54 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %53, i32 0, i32 1
+  %55 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %54, i32 0, i32 0
+  %56 = load i8, i8* %55, align 1
+  %57 = zext i8 %56 to i32
+  %58 = add nsw i32 %57, %52
+  %59 = trunc i32 %58 to i8
+  store i8 %59, i8* %55, align 1
+  %60 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
+  %61 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %60, i32 0, i32 1
+  %62 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %61, i32 0, i32 1
+  %63 = load i8, i8* %62, align 1
+  %64 = zext i8 %63 to i32
+  %65 = add nsw i32 %64, 1
+  %66 = trunc i32 %65 to i8
+  store i8 %66, i8* %62, align 1
+  br label %67
 
-; <label>:76                                      ; preds = %24, %16
-  call void @video_backend_render_block(i32 50) #2
-  br label %78
+; <label>:67                                      ; preds = %24, %16
+  %68 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
+  %69 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %68, i32 0, i32 0
+  %70 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %69, i32 0, i32 0
+  %71 = load i8, i8* %70, align 1
+  %72 = zext i8 %71 to i32
+  %73 = add nsw i32 %72, 10
+  %74 = trunc i32 %73 to i8
+  store i8 %74, i8* %70, align 1
+  %75 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
+  %76 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %75, i32 0, i32 0
+  %77 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %76, i32 0, i32 2
+  %78 = load i8, i8* %77, align 1
+  %79 = zext i8 %78 to i32
+  %80 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
+  %81 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %80, i32 0, i32 0
+  %82 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %81, i32 0, i32 1
+  %83 = load i8, i8* %82, align 1
+  %84 = zext i8 %83 to i32
+  %85 = mul nsw i32 %84, 3
+  %86 = add nsw i32 %79, %85
+  %87 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
+  %88 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %87, i32 0, i32 1
+  %89 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %88, i32 0, i32 2
+  %90 = load i8, i8* %89, align 1
+  %91 = zext i8 %90 to i32
+  %92 = add nsw i32 %91, %86
+  %93 = trunc i32 %92 to i8
+  store i8 %93, i8* %89, align 1
+  call void @video_backend_render_block(i32 40) #2
+  br label %95
 
-; <label>:77                                      ; preds = %0
+; <label>:94                                      ; preds = %0
   call void @video_backend_render_block(i32 0) #2
-  br label %78
+  br label %95
 
-; <label>:78                                      ; preds = %77, %76
+; <label>:95                                      ; preds = %94, %67
   ret void
 }
 
