@@ -1,16 +1,16 @@
-; ModuleID = 'testbench\c\demo1.c'
+; ModuleID = 'testbench\c\demos.c'
 target datalayout = "E-p:64:64:64-i1:8:64-i8:8:64-i16:16:64-i32:32:64-f64:64-a:0:64-n64"
 target triple = "fisc-unknown-unknown"
 
 %struct.IO = type { %struct.anon, %struct.anon.0, %struct.anon.1 }
 %struct.anon = type { i8, i8, i8, i8, i8, i8, i8, i8 }
 %struct.anon.0 = type <{ i8, i8, i32, i8 }>
-%struct.anon.1 = type <{ i8, i8, i16, i16, i8, i8, i8, [50 x i64] }>
+%struct.anon.1 = type <{ i8, i8, i16, i16, i8, i8, i8, [16 x i64] }>
 %struct.rgbpack_t = type { %struct.rgb_t, %struct.rgb_t }
 %struct.rgb_t = type { i8, i8, i8, i8 }
 
 @.str = private unnamed_addr global [7 x i8] c"(null)\00", align 1
-@io = internal global %struct.IO* inttoptr (i64 20480 to %struct.IO*), section ".data", align 4
+@io = internal global %struct.IO* inttoptr (i64 5242880 to %struct.IO*), section ".data", align 4
 @__printf_buff__ = internal global [256 x i8] zeroinitializer, section ".data", align 1
 @alloc_head = global i32 131072, section ".data", align 4
 @video_render_counter = internal global i32 0, section ".data", align 4
@@ -25,8 +25,24 @@ target triple = "fisc-unknown-unknown"
 @video_test.video_y = internal global i16 0, section ".data", align 2
 @video_test.video_colorinfo = internal global i64 0, section ".data", align 8
 @video_test.inc = internal global i8 0, section ".data", align 1
-@.str.8 = private unnamed_addr global [21 x i8] c"\0A> This is demo # 1\0A\00", align 1
-@.str.9 = private unnamed_addr global [17 x i8] c"0123456789abcdef\00", align 1
+@.str.8 = private unnamed_addr global [10 x i8] c"FizzBuzz \00", align 1
+@.str.9 = private unnamed_addr global [6 x i8] c"Fizz \00", align 1
+@.str.10 = private unnamed_addr global [6 x i8] c"Buzz \00", align 1
+@.str.11 = private unnamed_addr global [4 x i8] c"%d \00", align 1
+@.str.12 = private unnamed_addr global [29 x i8] c"\0A\0A> Done (press q to return)\00", align 1
+@.str.13 = private unnamed_addr global [65 x i8] c"(press q to return)\0AHow many numbers do you want to calculate : \00", align 1
+@program2_calculator.numbers = internal global [9 x i32] zeroinitializer, section ".data", align 4
+@program2_calculator.operators = internal global [8 x i8] zeroinitializer, section ".data", align 1
+@.str.14 = private unnamed_addr global [15 x i8] c"\0A> Number %d: \00", align 1
+@.str.15 = private unnamed_addr global [30 x i8] c"\0A> Operator (+ - * / % & |): \00", align 1
+@.str.16 = private unnamed_addr global [26 x i8] c"\0A>>>>> Answer: %d <<<<<\0A\0A\00", align 1
+@.str.17 = private unnamed_addr global [116 x i8] c"\0AChoose the demo from the list below:\0A1- FizzBuzz\0A2- Calculator\0A3- Pixel painter\0A4- Secret game\0Aq- Quit\0A\0A> Choose: \00", align 1
+@.str.18 = private unnamed_addr global [79 x i8] c"\0AYou are now in the FizzBuzz program (press q to return at any time)\0A________\0A\00", align 1
+@.str.19 = private unnamed_addr global [81 x i8] c"\0AYou are now in the Calculator program (press q to return at any time)\0A________\0A\00", align 1
+@.str.20 = private unnamed_addr global [84 x i8] c"\0AYou are now in the Pixel painter program (press q to return at any time)\0A________\0A\00", align 1
+@.str.21 = private unnamed_addr global [82 x i8] c"\0AYou are now in the Secret game program (press q to return at any time)\0A________\0A\00", align 1
+@.str.22 = private unnamed_addr global [40 x i8] c"\0A________\0AWelcome back to the main menu\00", align 1
+@.str.23 = private unnamed_addr global [17 x i8] c"0123456789abcdef\00", align 1
 
 ; Function Attrs: nounwind
 define i32 @strlen(i8* %str) #0 {
@@ -81,6 +97,22 @@ define i32 @mod10(i32 %a) #0 {
   %5 = mul nsw i32 10, %4
   %6 = sub nsw i32 %2, %5
   ret i32 %6
+}
+
+; Function Attrs: nounwind
+define i32 @mod(i32 %a, i32 %b) #0 {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  store i32 %a, i32* %1, align 4
+  store i32 %b, i32* %2, align 4
+  %3 = load i32, i32* %1, align 4
+  %4 = load i32, i32* %2, align 4
+  %5 = load i32, i32* %1, align 4
+  %6 = load i32, i32* %2, align 4
+  %7 = udiv i32 %5, %6
+  %8 = mul i32 %4, %7
+  %9 = sub i32 %3, %8
+  ret i32 %9
 }
 
 ; Function Attrs: nounwind
@@ -416,7 +448,7 @@ define internal void @print_hex(i32 %value, i32 %width, i8* %buf, i32* %ptr) #0 
   %52 = mul nsw i32 %51, 4
   %53 = lshr i32 %50, %52
   %54 = and i32 %53, 15
-  %55 = getelementptr inbounds [17 x i8], [17 x i8]* @.str.9, i32 0, i32 %54
+  %55 = getelementptr inbounds [17 x i8], [17 x i8]* @.str.23, i32 0, i32 %54
   %56 = load i8, i8* %55, align 1
   %57 = load i32*, i32** %4, align 4
   %58 = load i32, i32* %57, align 4
@@ -736,6 +768,60 @@ define i32 @isspace(i32 %ch) #0 {
 }
 
 ; Function Attrs: nounwind
+define i32 @tolower(i32 %ch) #0 {
+  %1 = alloca i32, align 4
+  store i32 %ch, i32* %1, align 4
+  %2 = load i32, i32* %1, align 4
+  %3 = icmp sge i32 %2, 65
+  br i1 %3, label %4, label %10
+
+; <label>:4                                       ; preds = %0
+  %5 = load i32, i32* %1, align 4
+  %6 = icmp sle i32 %5, 90
+  br i1 %6, label %7, label %10
+
+; <label>:7                                       ; preds = %4
+  %8 = load i32, i32* %1, align 4
+  %9 = add nsw i32 %8, 32
+  br label %12
+
+; <label>:10                                      ; preds = %4, %0
+  %11 = load i32, i32* %1, align 4
+  br label %12
+
+; <label>:12                                      ; preds = %10, %7
+  %13 = phi i32 [ %9, %7 ], [ %11, %10 ]
+  ret i32 %13
+}
+
+; Function Attrs: nounwind
+define i32 @toupper(i32 %ch) #0 {
+  %1 = alloca i32, align 4
+  store i32 %ch, i32* %1, align 4
+  %2 = load i32, i32* %1, align 4
+  %3 = icmp sge i32 %2, 97
+  br i1 %3, label %4, label %10
+
+; <label>:4                                       ; preds = %0
+  %5 = load i32, i32* %1, align 4
+  %6 = icmp sle i32 %5, 122
+  br i1 %6, label %7, label %10
+
+; <label>:7                                       ; preds = %4
+  %8 = load i32, i32* %1, align 4
+  %9 = sub nsw i32 %8, 32
+  br label %12
+
+; <label>:10                                      ; preds = %4, %0
+  %11 = load i32, i32* %1, align 4
+  br label %12
+
+; <label>:12                                      ; preds = %10, %7
+  %13 = phi i32 [ %9, %7 ], [ %11, %10 ]
+  ret i32 %13
+}
+
+; Function Attrs: nounwind
 define i8* @malloc(i32 %size) #0 {
   %1 = alloca i32, align 4
   %thisloc = alloca i32, align 4
@@ -1023,7 +1109,7 @@ define void @video_pixels_pack(i32 %loc, %struct.rgbpack_t* %rgbpack) #0 {
   %5 = load %struct.IO*, %struct.IO** @io, align 4
   %6 = getelementptr inbounds %struct.IO, %struct.IO* %5, i32 0, i32 2
   %7 = getelementptr inbounds %struct.anon.1, %struct.anon.1* %6, i32 0, i32 7
-  %8 = getelementptr inbounds [50 x i64], [50 x i64]* %7, i32 0, i32 0
+  %8 = getelementptr inbounds [16 x i64], [16 x i64]* %7, i32 0, i32 0
   store i64* %8, i64** %pxdata_ptr, align 4
   %9 = load i64*, i64** %rgbpack_64cast, align 4
   %10 = load i64, i64* %9, align 8
@@ -1156,7 +1242,7 @@ define void @video_test() #0 {
 
 ; <label>:7                                       ; preds = %13, %4
   %8 = load i32, i32* %i, align 4
-  %9 = icmp slt i32 %8, 50
+  %9 = icmp slt i32 %8, 16
   br i1 %9, label %10, label %16
 
 ; <label>:10                                      ; preds = %7
@@ -1174,12 +1260,12 @@ define void @video_test() #0 {
 ; <label>:16                                      ; preds = %7
   %17 = load i16, i16* @video_test.video_x, align 2
   %18 = zext i16 %17 to i32
-  %19 = add nsw i32 %18, 100
+  %19 = add nsw i32 %18, 32
   %20 = trunc i32 %19 to i16
   store i16 %20, i16* @video_test.video_x, align 2
   %21 = load i16, i16* @video_test.video_x, align 2
   %22 = zext i16 %21 to i32
-  %23 = icmp sgt i32 %22, 800
+  %23 = icmp sge i32 %22, 800
   br i1 %23, label %24, label %139
 
 ; <label>:24                                      ; preds = %16
@@ -1342,7 +1428,355 @@ define void @video_test() #0 {
 }
 
 ; Function Attrs: nounwind
-define void @start() #0 {
+define void @program1_fizzbuzz() #0 {
+  %i = alloca i32, align 4
+  %fizz = alloca i8, align 1
+  %buzz = alloca i8, align 1
+  store i32 1, i32* %i, align 4
+  br label %1
+
+; <label>:1                                       ; preds = %41, %0
+  %2 = load i32, i32* %i, align 4
+  %3 = icmp sle i32 %2, 100
+  br i1 %3, label %4, label %44
+
+; <label>:4                                       ; preds = %1
+  %5 = load i32, i32* %i, align 4
+  %6 = call i32 @mod(i32 %5, i32 3) #2
+  %7 = trunc i32 %6 to i8
+  %8 = icmp ne i8 %7, 0
+  %9 = xor i1 %8, true
+  %10 = zext i1 %9 to i32
+  %11 = trunc i32 %10 to i8
+  store i8 %11, i8* %fizz, align 1
+  %12 = load i32, i32* %i, align 4
+  %13 = call i32 @mod(i32 %12, i32 5) #2
+  %14 = trunc i32 %13 to i8
+  %15 = icmp ne i8 %14, 0
+  %16 = xor i1 %15, true
+  %17 = zext i1 %16 to i32
+  %18 = trunc i32 %17 to i8
+  store i8 %18, i8* %buzz, align 1
+  %19 = load i8, i8* %fizz, align 1
+  %20 = sext i8 %19 to i32
+  %21 = icmp ne i32 %20, 0
+  br i1 %21, label %22, label %27
+
+; <label>:22                                      ; preds = %4
+  %23 = load i8, i8* %buzz, align 1
+  %24 = sext i8 %23 to i32
+  %25 = icmp ne i32 %24, 0
+  br i1 %25, label %26, label %27
+
+; <label>:26                                      ; preds = %22
+  call void @puts(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str.8, i32 0, i32 0)) #2
+  br label %40
+
+; <label>:27                                      ; preds = %22, %4
+  %28 = load i8, i8* %fizz, align 1
+  %29 = icmp ne i8 %28, 0
+  br i1 %29, label %30, label %31
+
+; <label>:30                                      ; preds = %27
+  call void @puts(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.9, i32 0, i32 0)) #2
+  br label %39
+
+; <label>:31                                      ; preds = %27
+  %32 = load i8, i8* %buzz, align 1
+  %33 = icmp ne i8 %32, 0
+  br i1 %33, label %34, label %35
+
+; <label>:34                                      ; preds = %31
+  call void @puts(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.10, i32 0, i32 0)) #2
+  br label %38
+
+; <label>:35                                      ; preds = %31
+  %36 = load i32, i32* %i, align 4
+  %37 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.11, i32 0, i32 0), i32 %36) #2
+  br label %38
+
+; <label>:38                                      ; preds = %35, %34
+  br label %39
+
+; <label>:39                                      ; preds = %38, %30
+  br label %40
+
+; <label>:40                                      ; preds = %39, %26
+  br label %41
+
+; <label>:41                                      ; preds = %40
+  %42 = load i32, i32* %i, align 4
+  %43 = add nsw i32 %42, 1
+  store i32 %43, i32* %i, align 4
+  br label %1
+
+; <label>:44                                      ; preds = %1
+  %45 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([29 x i8], [29 x i8]* @.str.12, i32 0, i32 0)) #2
+  br label %46
+
+; <label>:46                                      ; preds = %51, %44
+  %47 = call signext i8 @getch() #2
+  %48 = sext i8 %47 to i32
+  %49 = call i32 @tolower(i32 %48) #2
+  %50 = icmp ne i32 %49, 113
+  br i1 %50, label %51, label %52
+
+; <label>:51                                      ; preds = %46
+  br label %46
+
+; <label>:52                                      ; preds = %46
+  ret void
+}
+
+; Function Attrs: nounwind
+define i32 @read_number(i32 %maxnum) #0 {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  %number = alloca i32, align 4
+  store i32 %maxnum, i32* %2, align 4
+  store i32 -1, i32* %number, align 4
+  br label %3
+
+; <label>:3                                       ; preds = %22, %0
+  %4 = load i32, i32* %number, align 4
+  %5 = call i32 @isdigit(i32 %4) #2
+  %6 = icmp ne i32 %5, 0
+  br i1 %6, label %7, label %12
+
+; <label>:7                                       ; preds = %3
+  %8 = load i32, i32* %number, align 4
+  %9 = sub nsw i32 %8, 48
+  %10 = load i32, i32* %2, align 4
+  %11 = icmp sgt i32 %9, %10
+  br label %12
+
+; <label>:12                                      ; preds = %7, %3
+  %13 = phi i1 [ true, %3 ], [ %11, %7 ]
+  br i1 %13, label %14, label %23
+
+; <label>:14                                      ; preds = %12
+  %15 = call signext i8 @getch() #2
+  %16 = sext i8 %15 to i32
+  store i32 %16, i32* %number, align 4
+  %17 = load i32, i32* %number, align 4
+  %18 = call i32 @tolower(i32 %17) #2
+  %19 = icmp eq i32 %18, 113
+  br i1 %19, label %20, label %22
+
+; <label>:20                                      ; preds = %14
+  %21 = load i32, i32* %number, align 4
+  store i32 %21, i32* %1, align 4
+  br label %26
+
+; <label>:22                                      ; preds = %14
+  br label %3
+
+; <label>:23                                      ; preds = %12
+  %24 = load i32, i32* %number, align 4
+  %25 = sub nsw i32 %24, 48
+  store i32 %25, i32* %1, align 4
+  br label %26
+
+; <label>:26                                      ; preds = %23, %20
+  %27 = load i32, i32* %1, align 4
+  ret i32 %27
+}
+
+; Function Attrs: nounwind
+define signext i8 @read_operator() #0 {
+  %operator = alloca i8, align 1
+  store i8 0, i8* %operator, align 1
+  br label %1
+
+; <label>:1                                       ; preds = %0, %36
+  %2 = call signext i8 @getch() #2
+  store i8 %2, i8* %operator, align 1
+  %3 = load i8, i8* %operator, align 1
+  %4 = sext i8 %3 to i32
+  %5 = icmp eq i32 %4, 43
+  br i1 %5, label %34, label %6
+
+; <label>:6                                       ; preds = %1
+  %7 = load i8, i8* %operator, align 1
+  %8 = sext i8 %7 to i32
+  %9 = icmp eq i32 %8, 45
+  br i1 %9, label %34, label %10
+
+; <label>:10                                      ; preds = %6
+  %11 = load i8, i8* %operator, align 1
+  %12 = sext i8 %11 to i32
+  %13 = icmp eq i32 %12, 42
+  br i1 %13, label %34, label %14
+
+; <label>:14                                      ; preds = %10
+  %15 = load i8, i8* %operator, align 1
+  %16 = sext i8 %15 to i32
+  %17 = icmp eq i32 %16, 47
+  br i1 %17, label %34, label %18
+
+; <label>:18                                      ; preds = %14
+  %19 = load i8, i8* %operator, align 1
+  %20 = sext i8 %19 to i32
+  %21 = icmp eq i32 %20, 37
+  br i1 %21, label %34, label %22
+
+; <label>:22                                      ; preds = %18
+  %23 = load i8, i8* %operator, align 1
+  %24 = sext i8 %23 to i32
+  %25 = icmp eq i32 %24, 38
+  br i1 %25, label %34, label %26
+
+; <label>:26                                      ; preds = %22
+  %27 = load i8, i8* %operator, align 1
+  %28 = sext i8 %27 to i32
+  %29 = icmp eq i32 %28, 124
+  br i1 %29, label %34, label %30
+
+; <label>:30                                      ; preds = %26
+  %31 = load i8, i8* %operator, align 1
+  %32 = sext i8 %31 to i32
+  %33 = icmp eq i32 %32, 113
+  br i1 %33, label %34, label %36
+
+; <label>:34                                      ; preds = %30, %26, %22, %18, %14, %10, %6, %1
+  %35 = load i8, i8* %operator, align 1
+  ret i8 %35
+
+; <label>:36                                      ; preds = %30
+  br label %1
+}
+
+; Function Attrs: nounwind
+define i32 @calculate(i32 %num1, i32 %num2, i8 signext %operation) #0 {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  %3 = alloca i32, align 4
+  %4 = alloca i8, align 1
+  store i32 %num1, i32* %2, align 4
+  store i32 %num2, i32* %3, align 4
+  store i8 %operation, i8* %4, align 1
+  %5 = load i8, i8* %4, align 1
+  %6 = sext i8 %5 to i32
+  %7 = icmp eq i32 %6, 43
+  br i1 %7, label %8, label %12
+
+; <label>:8                                       ; preds = %0
+  %9 = load i32, i32* %2, align 4
+  %10 = load i32, i32* %3, align 4
+  %11 = add nsw i32 %9, %10
+  store i32 %11, i32* %1, align 4
+  br label %67
+
+; <label>:12                                      ; preds = %0
+  %13 = load i8, i8* %4, align 1
+  %14 = sext i8 %13 to i32
+  %15 = icmp eq i32 %14, 45
+  br i1 %15, label %16, label %20
+
+; <label>:16                                      ; preds = %12
+  %17 = load i32, i32* %2, align 4
+  %18 = load i32, i32* %3, align 4
+  %19 = sub nsw i32 %17, %18
+  store i32 %19, i32* %1, align 4
+  br label %67
+
+; <label>:20                                      ; preds = %12
+  %21 = load i8, i8* %4, align 1
+  %22 = sext i8 %21 to i32
+  %23 = icmp eq i32 %22, 42
+  br i1 %23, label %24, label %28
+
+; <label>:24                                      ; preds = %20
+  %25 = load i32, i32* %2, align 4
+  %26 = load i32, i32* %3, align 4
+  %27 = mul nsw i32 %25, %26
+  store i32 %27, i32* %1, align 4
+  br label %67
+
+; <label>:28                                      ; preds = %20
+  %29 = load i8, i8* %4, align 1
+  %30 = sext i8 %29 to i32
+  %31 = icmp eq i32 %30, 47
+  br i1 %31, label %32, label %36
+
+; <label>:32                                      ; preds = %28
+  %33 = load i32, i32* %2, align 4
+  %34 = load i32, i32* %3, align 4
+  %35 = sdiv i32 %33, %34
+  store i32 %35, i32* %1, align 4
+  br label %67
+
+; <label>:36                                      ; preds = %28
+  %37 = load i8, i8* %4, align 1
+  %38 = sext i8 %37 to i32
+  %39 = icmp eq i32 %38, 37
+  br i1 %39, label %40, label %44
+
+; <label>:40                                      ; preds = %36
+  %41 = load i32, i32* %2, align 4
+  %42 = load i32, i32* %3, align 4
+  %43 = call i32 @mod(i32 %41, i32 %42) #2
+  store i32 %43, i32* %1, align 4
+  br label %67
+
+; <label>:44                                      ; preds = %36
+  %45 = load i8, i8* %4, align 1
+  %46 = sext i8 %45 to i32
+  %47 = icmp eq i32 %46, 38
+  br i1 %47, label %48, label %52
+
+; <label>:48                                      ; preds = %44
+  %49 = load i32, i32* %2, align 4
+  %50 = load i32, i32* %3, align 4
+  %51 = and i32 %49, %50
+  store i32 %51, i32* %1, align 4
+  br label %67
+
+; <label>:52                                      ; preds = %44
+  %53 = load i8, i8* %4, align 1
+  %54 = sext i8 %53 to i32
+  %55 = icmp eq i32 %54, 124
+  br i1 %55, label %56, label %60
+
+; <label>:56                                      ; preds = %52
+  %57 = load i32, i32* %2, align 4
+  %58 = load i32, i32* %3, align 4
+  %59 = or i32 %57, %58
+  store i32 %59, i32* %1, align 4
+  br label %67
+
+; <label>:60                                      ; preds = %52
+  br label %61
+
+; <label>:61                                      ; preds = %60
+  br label %62
+
+; <label>:62                                      ; preds = %61
+  br label %63
+
+; <label>:63                                      ; preds = %62
+  br label %64
+
+; <label>:64                                      ; preds = %63
+  br label %65
+
+; <label>:65                                      ; preds = %64
+  br label %66
+
+; <label>:66                                      ; preds = %65
+  store i32 -1, i32* %1, align 4
+  br label %67
+
+; <label>:67                                      ; preds = %66, %56, %48, %40, %32, %24, %16, %8
+  %68 = load i32, i32* %1, align 4
+  ret i32 %68
+}
+
+; Function Attrs: nounwind
+define void @program2_calculator() #0 {
+  %numcount = alloca i32, align 4
+  %ans = alloca i32, align 4
+  %i = alloca i32, align 4
   %__st1__ = alloca i8, align 1
   %__st2__ = alloca i8, align 1
   %__st3__ = alloca i8, align 1
@@ -1363,45 +1797,401 @@ define void @start() #0 {
   %__st18__ = alloca i8, align 1
   %__st19__ = alloca i8, align 1
   %__st20__ = alloca i8, align 1
+  %operator_counter = alloca i32, align 4
+  %i1 = alloca i32, align 4
+  br label %1
+
+; <label>:1                                       ; preds = %0, %118
+  %2 = call signext i8 @kbhit() #2
+  %3 = sext i8 %2 to i32
+  %4 = icmp ne i32 %3, 0
+  br i1 %4, label %5, label %11
+
+; <label>:5                                       ; preds = %1
+  %6 = call signext i8 @getch_async() #2
+  %7 = sext i8 %6 to i32
+  %8 = call i32 @tolower(i32 %7) #2
+  %9 = icmp eq i32 %8, 113
+  br i1 %9, label %10, label %11
+
+; <label>:10                                      ; preds = %5
+  br label %121
+
+; <label>:11                                      ; preds = %5, %1
+  call void @puts(i8* getelementptr inbounds ([65 x i8], [65 x i8]* @.str.13, i32 0, i32 0)) #2
+  %12 = call i32 @read_number(i32 8) #2
+  store i32 %12, i32* %numcount, align 4
+  %13 = load i32, i32* %numcount, align 4
+  %14 = call i32 @tolower(i32 %13) #2
+  %15 = icmp eq i32 %14, 113
+  br i1 %15, label %16, label %19
+
+; <label>:16                                      ; preds = %11
+  %17 = load i32, i32* %numcount, align 4
+  %18 = trunc i32 %17 to i8
+  call void @putc(i8 signext %18) #2
+  br label %121
+
+; <label>:19                                      ; preds = %11
+  %20 = load i32, i32* %numcount, align 4
+  %21 = add nsw i32 %20, 48
+  %22 = trunc i32 %21 to i8
+  call void @putc(i8 signext %22) #2
+  store i32 0, i32* %ans, align 4
+  store i32 0, i32* %i, align 4
+  br label %23
+
+; <label>:23                                      ; preds = %70, %19
+  %24 = load i32, i32* %i, align 4
+  %25 = load i32, i32* %numcount, align 4
+  %26 = icmp slt i32 %24, %25
+  br i1 %26, label %27, label %73
+
+; <label>:27                                      ; preds = %23
+  %28 = load i32, i32* %i, align 4
+  %29 = add nsw i32 %28, 1
+  %30 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str.14, i32 0, i32 0), i32 %29) #2
+  %31 = call i32 @read_number(i32 9) #2
+  %32 = load i32, i32* %i, align 4
+  %33 = getelementptr inbounds [9 x i32], [9 x i32]* @program2_calculator.numbers, i32 0, i32 %32
+  store i32 %31, i32* %33, align 4
+  %34 = load i32, i32* %i, align 4
+  %35 = getelementptr inbounds [9 x i32], [9 x i32]* @program2_calculator.numbers, i32 0, i32 %34
+  %36 = load i32, i32* %35, align 4
+  %37 = call i32 @tolower(i32 %36) #2
+  %38 = icmp eq i32 %37, 113
+  br i1 %38, label %39, label %42
+
+; <label>:39                                      ; preds = %27
+  %40 = load i32, i32* %numcount, align 4
+  %41 = trunc i32 %40 to i8
+  call void @putc(i8 signext %41) #2
+  br label %121
+
+; <label>:42                                      ; preds = %27
+  %43 = load i32, i32* %i, align 4
+  %44 = getelementptr inbounds [9 x i32], [9 x i32]* @program2_calculator.numbers, i32 0, i32 %43
+  %45 = load i32, i32* %44, align 4
+  %46 = add nsw i32 %45, 48
+  %47 = trunc i32 %46 to i8
+  call void @putc(i8 signext %47) #2
+  %48 = load i32, i32* %i, align 4
+  %49 = load i32, i32* %numcount, align 4
+  %50 = sub nsw i32 %49, 1
+  %51 = icmp sge i32 %48, %50
+  br i1 %51, label %52, label %53
+
+; <label>:52                                      ; preds = %42
+  br label %73
+
+; <label>:53                                      ; preds = %42
+  call void @puts(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @.str.15, i32 0, i32 0)) #2
+  %54 = call signext i8 @read_operator() #2
+  %55 = load i32, i32* %i, align 4
+  %56 = getelementptr inbounds [8 x i8], [8 x i8]* @program2_calculator.operators, i32 0, i32 %55
+  store i8 %54, i8* %56, align 1
+  %57 = load i32, i32* %i, align 4
+  %58 = getelementptr inbounds [8 x i8], [8 x i8]* @program2_calculator.operators, i32 0, i32 %57
+  %59 = load i8, i8* %58, align 1
+  %60 = sext i8 %59 to i32
+  %61 = call i32 @tolower(i32 %60) #2
+  %62 = icmp eq i32 %61, 113
+  br i1 %62, label %63, label %66
+
+; <label>:63                                      ; preds = %53
+  %64 = load i32, i32* %numcount, align 4
+  %65 = trunc i32 %64 to i8
+  call void @putc(i8 signext %65) #2
+  br label %121
+
+; <label>:66                                      ; preds = %53
+  %67 = load i32, i32* %i, align 4
+  %68 = getelementptr inbounds [8 x i8], [8 x i8]* @program2_calculator.operators, i32 0, i32 %67
+  %69 = load i8, i8* %68, align 1
+  call void @putc(i8 signext %69) #2
+  br label %70
+
+; <label>:70                                      ; preds = %66
+  %71 = load i32, i32* %i, align 4
+  %72 = add nsw i32 %71, 1
+  store i32 %72, i32* %i, align 4
+  br label %23
+
+; <label>:73                                      ; preds = %52, %23
+  %74 = load i32, i32* %numcount, align 4
+  %75 = icmp eq i32 %74, 1
+  br i1 %75, label %76, label %78
+
+; <label>:76                                      ; preds = %73
+  %77 = load i32, i32* getelementptr inbounds ([9 x i32], [9 x i32]* @program2_calculator.numbers, i32 0, i32 0), align 4
+  store i32 %77, i32* %ans, align 4
+  br label %118
+
+; <label>:78                                      ; preds = %73
+  store i32 0, i32* %operator_counter, align 4
+  store i32 0, i32* %i1, align 4
+  br label %79
+
+; <label>:79                                      ; preds = %99, %78
+  %80 = load i32, i32* %i1, align 4
+  %81 = load i32, i32* %numcount, align 4
+  %82 = sub nsw i32 %81, 1
+  %83 = icmp slt i32 %80, %82
+  br i1 %83, label %84, label %102
+
+; <label>:84                                      ; preds = %79
+  %85 = load i32, i32* %i1, align 4
+  %86 = getelementptr inbounds [9 x i32], [9 x i32]* @program2_calculator.numbers, i32 0, i32 %85
+  %87 = load i32, i32* %86, align 4
+  %88 = load i32, i32* %i1, align 4
+  %89 = add nsw i32 %88, 1
+  %90 = getelementptr inbounds [9 x i32], [9 x i32]* @program2_calculator.numbers, i32 0, i32 %89
+  %91 = load i32, i32* %90, align 4
+  %92 = load i32, i32* %operator_counter, align 4
+  %93 = add nsw i32 %92, 1
+  store i32 %93, i32* %operator_counter, align 4
+  %94 = getelementptr inbounds [8 x i8], [8 x i8]* @program2_calculator.operators, i32 0, i32 %92
+  %95 = load i8, i8* %94, align 1
+  %96 = call i32 @calculate(i32 %87, i32 %91, i8 signext %95) #2
+  %97 = load i32, i32* %ans, align 4
+  %98 = add nsw i32 %97, %96
+  store i32 %98, i32* %ans, align 4
+  br label %99
+
+; <label>:99                                      ; preds = %84
+  %100 = load i32, i32* %i1, align 4
+  %101 = add nsw i32 %100, 2
+  store i32 %101, i32* %i1, align 4
+  br label %79
+
+; <label>:102                                     ; preds = %79
+  %103 = load i32, i32* %numcount, align 4
+  %104 = call i32 @mod(i32 %103, i32 2) #2
+  %105 = icmp ne i32 %104, 0
+  br i1 %105, label %106, label %117
+
+; <label>:106                                     ; preds = %102
+  %107 = load i32, i32* %ans, align 4
+  %108 = load i32, i32* %numcount, align 4
+  %109 = sub nsw i32 %108, 1
+  %110 = getelementptr inbounds [9 x i32], [9 x i32]* @program2_calculator.numbers, i32 0, i32 %109
+  %111 = load i32, i32* %110, align 4
+  %112 = load i32, i32* %numcount, align 4
+  %113 = sub nsw i32 %112, 2
+  %114 = getelementptr inbounds [8 x i8], [8 x i8]* @program2_calculator.operators, i32 0, i32 %113
+  %115 = load i8, i8* %114, align 1
+  %116 = call i32 @calculate(i32 %107, i32 %111, i8 signext %115) #2
+  store i32 %116, i32* %ans, align 4
+  br label %117
+
+; <label>:117                                     ; preds = %106, %102
+  br label %118
+
+; <label>:118                                     ; preds = %117, %76
+  %119 = load i32, i32* %ans, align 4
+  %120 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([26 x i8], [26 x i8]* @.str.16, i32 0, i32 0), i32 %119) #2
+  br label %1
+
+; <label>:121                                     ; preds = %16, %39, %63, %10
+  ret void
+}
+
+; Function Attrs: nounwind
+define void @program3_painting_vga() #0 {
+  %running = alloca i8, align 1
+  store i8 1, i8* %running, align 1
+  br label %1
+
+; <label>:1                                       ; preds = %14, %0
+  %2 = load i8, i8* %running, align 1
+  %3 = icmp ne i8 %2, 0
+  br i1 %3, label %4, label %15
+
+; <label>:4                                       ; preds = %1
+  %5 = call signext i8 @kbhit() #2
+  %6 = sext i8 %5 to i32
+  %7 = icmp ne i32 %6, 0
+  br i1 %7, label %8, label %14
+
+; <label>:8                                       ; preds = %4
+  %9 = call signext i8 @getch_async() #2
+  %10 = sext i8 %9 to i32
+  %11 = call i32 @tolower(i32 %10) #2
+  %12 = icmp eq i32 %11, 113
+  br i1 %12, label %13, label %14
+
+; <label>:13                                      ; preds = %8
+  br label %15
+
+; <label>:14                                      ; preds = %8, %4
+  br label %1
+
+; <label>:15                                      ; preds = %13, %1
+  ret void
+}
+
+; Function Attrs: nounwind
+define void @program4_vga_game() #0 {
+  %running = alloca i8, align 1
+  store i8 1, i8* %running, align 1
+  br label %1
+
+; <label>:1                                       ; preds = %14, %0
+  %2 = load i8, i8* %running, align 1
+  %3 = icmp ne i8 %2, 0
+  br i1 %3, label %4, label %15
+
+; <label>:4                                       ; preds = %1
+  %5 = call signext i8 @kbhit() #2
+  %6 = sext i8 %5 to i32
+  %7 = icmp ne i32 %6, 0
+  br i1 %7, label %8, label %14
+
+; <label>:8                                       ; preds = %4
+  %9 = call signext i8 @getch_async() #2
+  %10 = sext i8 %9 to i32
+  %11 = call i32 @tolower(i32 %10) #2
+  %12 = icmp eq i32 %11, 113
+  br i1 %12, label %13, label %14
+
+; <label>:13                                      ; preds = %8
+  br label %15
+
+; <label>:14                                      ; preds = %8, %4
+  br label %1
+
+; <label>:15                                      ; preds = %13, %1
+  ret void
+}
+
+; Function Attrs: nounwind
+define void @print_menu() #0 {
+  call void @puts(i8* getelementptr inbounds ([116 x i8], [116 x i8]* @.str.17, i32 0, i32 0)) #2
+  ret void
+}
+
+; Function Attrs: nounwind
+define void @start() #0 {
   %ch = alloca i8, align 1
+  %unknown_option = alloca i8, align 1
   call void @welcome() #2
-  %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.str.8, i32 0, i32 0)) #2
-  br label %2
+  call void @print_menu() #2
+  br label %1
 
-; <label>:2                                       ; preds = %0, %17
-  %3 = call signext i8 @video_is_enabled() #2
-  %4 = icmp ne i8 %3, 0
-  br i1 %4, label %6, label %5
+; <label>:1                                       ; preds = %0, %50
+  %2 = call signext i8 @video_is_enabled() #2
+  %3 = icmp ne i8 %2, 0
+  br i1 %3, label %5, label %4
 
-; <label>:5                                       ; preds = %2
-  br label %18
+; <label>:4                                       ; preds = %1
+  br label %51
 
-; <label>:6                                       ; preds = %2
+; <label>:5                                       ; preds = %1
   call void @video_test() #2
-  %7 = call signext i8 @kbhit() #2
-  %8 = icmp ne i8 %7, 0
-  br i1 %8, label %9, label %17
+  %6 = call signext i8 @kbhit() #2
+  %7 = icmp ne i8 %6, 0
+  br i1 %7, label %8, label %50
 
-; <label>:9                                       ; preds = %6
-  %10 = call signext i8 @getch_async() #2
-  store i8 %10, i8* %ch, align 1
-  %11 = load i8, i8* %ch, align 1
-  %12 = sext i8 %11 to i32
+; <label>:8                                       ; preds = %5
+  %9 = call signext i8 @getch_async() #2
+  store i8 %9, i8* %ch, align 1
+  store i8 0, i8* %unknown_option, align 1
+  %10 = load i8, i8* %ch, align 1
+  %11 = sext i8 %10 to i32
+  %12 = call i32 @tolower(i32 %11) #2
   %13 = icmp eq i32 %12, 113
-  br i1 %13, label %14, label %15
+  br i1 %13, label %14, label %16
 
-; <label>:14                                      ; preds = %9
-  br label %18
+; <label>:14                                      ; preds = %8
+  %15 = load i8, i8* %ch, align 1
+  call void @putc(i8 signext %15) #2
+  br label %51
 
-; <label>:15                                      ; preds = %9
-  %16 = load i8, i8* %ch, align 1
-  call void @putc(i8 signext %16) #2
-  br label %17
+; <label>:16                                      ; preds = %8
+  %17 = load i8, i8* %ch, align 1
+  %18 = sext i8 %17 to i32
+  %19 = icmp eq i32 %18, 49
+  br i1 %19, label %20, label %22
 
-; <label>:17                                      ; preds = %15, %6
-  br label %2
+; <label>:20                                      ; preds = %16
+  %21 = load i8, i8* %ch, align 1
+  call void @putc(i8 signext %21) #2
+  call void @puts(i8* getelementptr inbounds ([79 x i8], [79 x i8]* @.str.18, i32 0, i32 0)) #2
+  call void @program1_fizzbuzz() #2
+  br label %44
 
-; <label>:18                                      ; preds = %14, %5
+; <label>:22                                      ; preds = %16
+  %23 = load i8, i8* %ch, align 1
+  %24 = sext i8 %23 to i32
+  %25 = icmp eq i32 %24, 50
+  br i1 %25, label %26, label %28
+
+; <label>:26                                      ; preds = %22
+  %27 = load i8, i8* %ch, align 1
+  call void @putc(i8 signext %27) #2
+  call void @puts(i8* getelementptr inbounds ([81 x i8], [81 x i8]* @.str.19, i32 0, i32 0)) #2
+  call void @program2_calculator() #2
+  br label %43
+
+; <label>:28                                      ; preds = %22
+  %29 = load i8, i8* %ch, align 1
+  %30 = sext i8 %29 to i32
+  %31 = icmp eq i32 %30, 51
+  br i1 %31, label %32, label %34
+
+; <label>:32                                      ; preds = %28
+  %33 = load i8, i8* %ch, align 1
+  call void @putc(i8 signext %33) #2
+  call void @puts(i8* getelementptr inbounds ([84 x i8], [84 x i8]* @.str.20, i32 0, i32 0)) #2
+  call void @program3_painting_vga() #2
+  br label %42
+
+; <label>:34                                      ; preds = %28
+  %35 = load i8, i8* %ch, align 1
+  %36 = sext i8 %35 to i32
+  %37 = icmp eq i32 %36, 52
+  br i1 %37, label %38, label %40
+
+; <label>:38                                      ; preds = %34
+  %39 = load i8, i8* %ch, align 1
+  call void @putc(i8 signext %39) #2
+  call void @puts(i8* getelementptr inbounds ([82 x i8], [82 x i8]* @.str.21, i32 0, i32 0)) #2
+  call void @program4_vga_game() #2
+  br label %41
+
+; <label>:40                                      ; preds = %34
+  store i8 1, i8* %unknown_option, align 1
+  br label %41
+
+; <label>:41                                      ; preds = %40, %38
+  br label %42
+
+; <label>:42                                      ; preds = %41, %32
+  br label %43
+
+; <label>:43                                      ; preds = %42, %26
+  br label %44
+
+; <label>:44                                      ; preds = %43, %20
+  br label %45
+
+; <label>:45                                      ; preds = %44
+  %46 = load i8, i8* %unknown_option, align 1
+  %47 = icmp ne i8 %46, 0
+  br i1 %47, label %49, label %48
+
+; <label>:48                                      ; preds = %45
+  call void @puts(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @.str.22, i32 0, i32 0)) #2
+  call void @print_menu() #2
+  br label %49
+
+; <label>:49                                      ; preds = %48, %45
+  br label %50
+
+; <label>:50                                      ; preds = %49, %5
+  br label %1
+
+; <label>:51                                      ; preds = %14, %4
   call void @goodbye() #2
   ret void
 }

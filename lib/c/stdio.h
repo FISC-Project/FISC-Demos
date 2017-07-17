@@ -5,21 +5,11 @@
 #include "string.h"
 #include "stdint.h"
 #include "attr.h"
+#include "math.h"
 
 /************************/
 /******* PRINTING *******/
 /************************/
-int32_t div10(int32_t dividend)
-{
-	int64_t invDivisor = 0x1999999A;
-	return (int32_t)((invDivisor * dividend) >> 32);
-}
-
-int32_t mod10(int32_t a)
-{
-	return a - (10 * (div10(a)));
-}
-
 static void print_dec(unsigned int value, unsigned int width, char * buf, int * ptr)
 {
 	unsigned int n_width = 1;
