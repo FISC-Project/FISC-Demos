@@ -43,7 +43,7 @@ void start()
 						rgbs->rgb1.g = green1;
 						rgbs->rgb1.b = blue1;
 					} else {
-						rgbs->rgb1.r = rgbs->rgb1.g = rgbs->rgb1.b = 0;
+						rgbs->rgb1.r = rgbs->rgb1.g = rgbs->rgb1.b = 0xFF;
 					}
 
 					if(img[pxidx + 1] == 0xFF) {
@@ -51,7 +51,7 @@ void start()
 						rgbs->rgb2.g = green2;
 						rgbs->rgb2.b = blue2;
 					} else {
-						rgbs->rgb2.r = rgbs->rgb2.g = rgbs->rgb2.b = 0;
+						rgbs->rgb2.r = rgbs->rgb2.g = rgbs->rgb2.b = 0xFF;
 					}
 
 					pxidx += bitmap_count;

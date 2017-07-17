@@ -1325,15 +1325,15 @@ define void @start() #0 {
   %44 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %45 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %44, i32 0, i32 0
   %46 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %45, i32 0, i32 2
-  store i8 0, i8* %46, align 1
+  store i8 -1, i8* %46, align 1
   %47 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %48 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %47, i32 0, i32 0
   %49 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %48, i32 0, i32 1
-  store i8 0, i8* %49, align 1
+  store i8 -1, i8* %49, align 1
   %50 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %51 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %50, i32 0, i32 0
   %52 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %51, i32 0, i32 0
-  store i8 0, i8* %52, align 1
+  store i8 -1, i8* %52, align 1
   br label %53
 
 ; <label>:53                                      ; preds = %43, %30
@@ -1367,15 +1367,15 @@ define void @start() #0 {
   %74 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %75 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %74, i32 0, i32 1
   %76 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %75, i32 0, i32 2
-  store i8 0, i8* %76, align 1
+  store i8 -1, i8* %76, align 1
   %77 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %78 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %77, i32 0, i32 1
   %79 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %78, i32 0, i32 1
-  store i8 0, i8* %79, align 1
+  store i8 -1, i8* %79, align 1
   %80 = load %struct.rgbpack_t*, %struct.rgbpack_t** %rgbs, align 4
   %81 = getelementptr inbounds %struct.rgbpack_t, %struct.rgbpack_t* %80, i32 0, i32 1
   %82 = getelementptr inbounds %struct.rgb_t, %struct.rgb_t* %81, i32 0, i32 0
-  store i8 0, i8* %82, align 1
+  store i8 -1, i8* %82, align 1
   br label %83
 
 ; <label>:83                                      ; preds = %73, %60
