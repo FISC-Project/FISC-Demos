@@ -56,7 +56,9 @@ void video_test()
 
 void start()
 {
+	FIXSTACK;
 	welcome();
+
 	printf("\n> This is demo # 1\n");
 
 	while(1) {

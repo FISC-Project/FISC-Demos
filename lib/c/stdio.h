@@ -144,7 +144,7 @@ size_t vasprintf(char * buf, const char * fmt, va_list args)
 
 #define strfmt(buffer, fmt) do { va_list args; va_start(args, fmt); vasprintf(buffer, fmt, args); va_end(args); } while(0)
 
-int _sprintf(char * buf, const char * fmt, ...)
+int sprintf(char * buf, const char * fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -152,8 +152,6 @@ int _sprintf(char * buf, const char * fmt, ...)
 	va_end(args);
 	return out;
 }
-
-#define sprintf(buf, fmt, ...) FIXSTACK; _sprintf(buf, fmt, __VA_ARGS__)
 
 /*******************************/
 /******* STANDARD OUTPUT *******/

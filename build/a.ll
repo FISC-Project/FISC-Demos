@@ -562,7 +562,7 @@ define internal void @print_dec(i32 %value, i32 %width, i8* %buf, i32* %ptr) #0 
 }
 
 ; Function Attrs: nounwind
-define i32 @_sprintf(i8* %buf, i8* %fmt, ...) #0 {
+define i32 @sprintf(i8* %buf, i8* %fmt, ...) #0 {
   %1 = alloca i8*, align 4
   %2 = alloca i8*, align 4
   %args = alloca i8*, align 4
@@ -716,6 +716,37 @@ define signext i8 @getch_async() #0 {
 }
 
 ; Function Attrs: nounwind
+define i32 @isdigit(i32 %ch) #0 {
+  %1 = alloca i32, align 4
+  store i32 %ch, i32* %1, align 4
+  %2 = load i32, i32* %1, align 4
+  %3 = sub i32 %2, 48
+  %4 = icmp ult i32 %3, 10
+  %5 = zext i1 %4 to i32
+  ret i32 %5
+}
+
+; Function Attrs: nounwind
+define i32 @isspace(i32 %ch) #0 {
+  %1 = alloca i32, align 4
+  store i32 %ch, i32* %1, align 4
+  %2 = load i32, i32* %1, align 4
+  %3 = icmp eq i32 %2, 32
+  br i1 %3, label %8, label %4
+
+; <label>:4                                       ; preds = %0
+  %5 = load i32, i32* %1, align 4
+  %6 = sub i32 %5, 9
+  %7 = icmp ult i32 %6, 5
+  br label %8
+
+; <label>:8                                       ; preds = %4, %0
+  %9 = phi i1 [ true, %0 ], [ %7, %4 ]
+  %10 = zext i1 %9 to i32
+  ret i32 %10
+}
+
+; Function Attrs: nounwind
 define i8* @malloc(i32 %size) #0 {
   %1 = alloca i32, align 4
   %thisloc = alloca i32, align 4
@@ -816,6 +847,92 @@ define i8* @memset(i8* %dst, i32 %val, i32 %len) #0 {
 ; <label>:18                                      ; preds = %5
   %19 = load i8*, i8** %1, align 4
   ret i8* %19
+}
+
+; Function Attrs: nounwind
+define i32 @atoi(i8* %s) #0 {
+  %1 = alloca i8*, align 4
+  %n = alloca i32, align 4
+  %neg = alloca i32, align 4
+  store i8* %s, i8** %1, align 4
+  store i32 0, i32* %n, align 4
+  store i32 0, i32* %neg, align 4
+  br label %2
+
+; <label>:2                                       ; preds = %8, %0
+  %3 = load i8*, i8** %1, align 4
+  %4 = load i8, i8* %3, align 1
+  %5 = sext i8 %4 to i32
+  %6 = call i32 @isspace(i32 %5) #2
+  %7 = icmp ne i32 %6, 0
+  br i1 %7, label %8, label %11
+
+; <label>:8                                       ; preds = %2
+  %9 = load i8*, i8** %1, align 4
+  %10 = getelementptr inbounds i8, i8* %9, i32 1
+  store i8* %10, i8** %1, align 4
+  br label %2
+
+; <label>:11                                      ; preds = %2
+  %12 = load i8*, i8** %1, align 4
+  %13 = load i8, i8* %12, align 1
+  %14 = sext i8 %13 to i32
+  switch i32 %14, label %19 [
+    i32 45, label %15
+    i32 43, label %16
+  ]
+
+; <label>:15                                      ; preds = %11
+  store i32 1, i32* %neg, align 4
+  br label %16
+
+; <label>:16                                      ; preds = %15, %11
+  %17 = load i8*, i8** %1, align 4
+  %18 = getelementptr inbounds i8, i8* %17, i32 1
+  store i8* %18, i8** %1, align 4
+  br label %19
+
+; <label>:19                                      ; preds = %16, %11
+  br label %20
+
+; <label>:20                                      ; preds = %26, %19
+  %21 = load i8*, i8** %1, align 4
+  %22 = load i8, i8* %21, align 1
+  %23 = sext i8 %22 to i32
+  %24 = call i32 @isdigit(i32 %23) #2
+  %25 = icmp ne i32 %24, 0
+  br i1 %25, label %26, label %35
+
+; <label>:26                                      ; preds = %20
+  %27 = load i32, i32* %n, align 4
+  %28 = mul nsw i32 10, %27
+  %29 = load i8*, i8** %1, align 4
+  %30 = getelementptr inbounds i8, i8* %29, i32 1
+  store i8* %30, i8** %1, align 4
+  %31 = load i8, i8* %29, align 1
+  %32 = sext i8 %31 to i32
+  %33 = sub nsw i32 %32, 48
+  %34 = sub nsw i32 %28, %33
+  store i32 %34, i32* %n, align 4
+  br label %20
+
+; <label>:35                                      ; preds = %20
+  %36 = load i32, i32* %neg, align 4
+  %37 = icmp ne i32 %36, 0
+  br i1 %37, label %38, label %40
+
+; <label>:38                                      ; preds = %35
+  %39 = load i32, i32* %n, align 4
+  br label %43
+
+; <label>:40                                      ; preds = %35
+  %41 = load i32, i32* %n, align 4
+  %42 = sub nsw i32 0, %41
+  br label %43
+
+; <label>:43                                      ; preds = %40, %38
+  %44 = phi i32 [ %39, %38 ], [ %42, %40 ]
+  ret i32 %44
 }
 
 ; Function Attrs: nounwind
@@ -1237,6 +1354,26 @@ define void @video_test() #0 {
 
 ; Function Attrs: nounwind
 define void @start() #0 {
+  %__st1__ = alloca i8, align 1
+  %__st2__ = alloca i8, align 1
+  %__st3__ = alloca i8, align 1
+  %__st4__ = alloca i8, align 1
+  %__st5__ = alloca i8, align 1
+  %__st6__ = alloca i8, align 1
+  %__st7__ = alloca i8, align 1
+  %__st8__ = alloca i8, align 1
+  %__st9__ = alloca i8, align 1
+  %__st10__ = alloca i8, align 1
+  %__st11__ = alloca i8, align 1
+  %__st12__ = alloca i8, align 1
+  %__st13__ = alloca i8, align 1
+  %__st14__ = alloca i8, align 1
+  %__st15__ = alloca i8, align 1
+  %__st16__ = alloca i8, align 1
+  %__st17__ = alloca i8, align 1
+  %__st18__ = alloca i8, align 1
+  %__st19__ = alloca i8, align 1
+  %__st20__ = alloca i8, align 1
   %ch = alloca i8, align 1
   call void @welcome() #2
   %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.str.8, i32 0, i32 0)) #2
