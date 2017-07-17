@@ -1,27 +1,10 @@
-#ifndef STDIO_H_
-#define STDIO_H_
-
-#include "iospace.h"
-#include "string.h"
-#include "stdint.h"
-#include "attr.h"
-
-/************************/
-/******* PRINTING *******/
-/************************/
-int32_t div10(int32_t dividend)
-{
-	int64_t invDivisor = 0x1999999A;
-	return (int32_t)((invDivisor * dividend) >> 32);
-}
-
-int32_t mod10(int32_t a)
-{
-	return a - (10 * (div10(a)));
-}
+#include "include_all_libs.h"
+#include "fisc_system.h"
+#include "intro.h"
 
 static void print_dec(unsigned int value, unsigned int width, char * buf, int * ptr)
 {
+/*
 	unsigned int n_width = 1;
 	unsigned int i = 9;
 	while (value > i && i < UINT32_MAX) {
@@ -38,22 +21,22 @@ static void print_dec(unsigned int value, unsigned int width, char * buf, int * 
 	}
 
 	i = n_width;
-
 	while (i > 0) {
-		unsigned int n = div10(value);
-		int r = mod10(value);
+		unsigned int n = value / 10;
+		int r = value % 10;
 		buf[*ptr + i - 1] = r + '0';
 		i--;
 		value = n;
 	}
-
 	*ptr += n_width;
+*/
 }
 
 static void print_hex(unsigned int value, unsigned int width, char * buf, int * ptr)
 {
+/*
 	int i = width;
-	
+
 	if (i == 0) i = 8;
 
 	unsigned int n_width = 1;
@@ -71,13 +54,11 @@ static void print_hex(unsigned int value, unsigned int width, char * buf, int * 
 	}
 
 	i = (int)n_width;
-
-	value *= 2;
-
 	while (i-- > 0) {
 		buf[*ptr] = "0123456789abcdef"[(value >> (i * 4)) & 0xF];
-		*ptr += 1;
+		*ptr += +1;
 	}
+*/
 }
 
 size_t vasprintf(char * buf, const char * fmt, va_list args)
@@ -85,11 +66,9 @@ size_t vasprintf(char * buf, const char * fmt, va_list args)
 	int i = 0;
 	char * s;
 	char * b = buf;
-	int ctr = 0;
 	for (const char *f = fmt; *f; f++) {
 		if (*f != '%') {
 			*b++ = *f;
-			ctr++;
 			continue;
 		}
 		++f;
@@ -108,32 +87,26 @@ size_t vasprintf(char * buf, const char * fmt, va_list args)
 			}
 			while (*s) {
 				*b++ = *s++;
-				ctr++;
 			}
 			break;
 		case 'c': /* Single character */
 			*b++ = (char)va_arg(args, int);
-			ctr++;
 			break;
 		case 'x': /* Hexadecimal number */
-			i = ctr;
+			i = b - buf;
 			print_hex((unsigned long)va_arg(args, unsigned long), arg_width, buf, &i);
-			ctr = i;
 			b = buf + i;
 			break;
 		case 'd': /* Decimal number */
-			i = ctr;
+			i = b - buf;
 			print_dec((unsigned long)va_arg(args, unsigned long), arg_width, buf, &i);
-			ctr = i;
 			b = buf + i;
 			break;
 		case '%': /* Escape */
 			*b++ = '%';
-			ctr++;
 			break;
 		default: /* Nothing at all, just dump it */
 			*b++ = *f;
-			ctr++;
 			break;
 		}
 	}
@@ -142,10 +115,7 @@ size_t vasprintf(char * buf, const char * fmt, va_list args)
 	return b - buf;
 }
 
-#define strfmt(buffer, fmt) do { va_list args; va_start(args, fmt); vasprintf(buffer, fmt, args); va_end(args); } while(0)
-
-int _sprintf(char * buf, const char * fmt, ...)
-{
+int sprintf(char * buf, const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
 	int out = vasprintf(buf, fmt, args);
@@ -153,60 +123,81 @@ int _sprintf(char * buf, const char * fmt, ...)
 	return out;
 }
 
-#define sprintf(buf, fmt, ...) FIXSTACK; _sprintf(buf, fmt, __VA_ARGS__)
+static uint16_t video_x __data = 0;
+static uint16_t video_y __data = 0;
+static uint64_t video_colorinfo __data = 0;
+static bool inc __data = 0;
 
-/*******************************/
-/******* STANDARD OUTPUT *******/
-/*******************************/
-void wait_stdout_flush()
+void video_test()
 {
-	while(!io->VMConsole.wrRdy);
+	rgbpack_t * rgbs = (rgbpack_t*)&video_colorinfo;
+	if(video_y < VIDEO_HEIGHT) {
+		video_backend_setaddress(video_x, video_y);
+
+		for(int i = 0; i < VIDEO_PIXEL_CHANNEL_COUNT; i++)
+			video_pixels_pack(i, rgbs);
+
+		video_x += VIDEO_PIXEL_CHANNEL_COUNT * 2;
+
+		if(video_x > VIDEO_WIDTH) {
+			video_x = 0;
+			video_y++;
+
+			if(inc) {
+				if(video_y >= 254)
+					inc = !inc;
+
+				rgbs->rgb1.r += 2;
+				rgbs->rgb1.g += 3;
+				rgbs->rgb1.b += 4;
+
+				rgbs->rgb2.r += 2;
+				rgbs->rgb2.g += 3;
+				rgbs->rgb2.b += 4;
+			} else {
+				rgbs->rgb1.r -= 2;
+				rgbs->rgb1.g -= 2;
+				rgbs->rgb1.b -= 2;
+
+				rgbs->rgb2.r -= 2;
+				rgbs->rgb2.g -= 2;
+				rgbs->rgb2.b -= 2;
+
+				if(rgbs->rgb1.r <= 0)
+					inc = !inc;
+			}
+
+		}
+			
+		video_backend_render_block(40);
+	} else {
+		video_backend_render_block(0);
+	}
 }
 
-void putc(char ch)
+void start()
 {
-	/* Send byte to virtual console */
-	io->VMConsole.wr = ch;
+	welcome();
+	puts("\nAvailable Options:\nq- Quit\n\n");
+
+	/*static char buff[10] __data;
+	FIXSTACK;
+	sprintf(buff, "Text: %s", "formatted");*/
+
+	while(1) {
+		if(!video_is_enabled())
+			break;
+
+		video_test();
+
+		if(kbhit())
+		{
+			char ch = getch_async();
+			if(ch == 'q')
+				break;
+			putc(ch);
+		}
+	}
+
+	goodbye();
 }
-
-void puts(char * str)
-{
-	/* Send full string to virtual console */
-	for(size_t i = 0; i < strlen(str); i++)
-		putc(str[i]);
-}
-
-static char __printf_buff__[256] __data;
-
-int printf(const char * fmt, ...)
-{
-	strfmt(__printf_buff__, fmt);
-	puts(__printf_buff__);
-	return strlen(__printf_buff__);
-}
-
-/******************************/
-/******* STANDARD INPUT *******/
-/******************************/
-bool kbhit()
-{
-	return io->VMConsole.rdRdy;
-}
-
-char getch()
-{
-	while(!kbhit());
-	return io->VMConsole.rd;
-}
-
-char getch_async()
-{
-	return io->VMConsole.rd;
-}
-
-#define DEBUGLOC 0x10000
-#define DEBUG(loc, integer) (((uint32_t*)DEBUGLOC)[(loc)] = ((uint32_t)(integer)))
-#define DEBUGLIST(listsize, list) for(size_t _i_ = 0; _i_ < ((size_t)(listsize)); _i_++) DEBUG(_i_, ((uint32_t*)(list)[_i_]));
-#define DEBUGLISTOFF(offset, listsize, list) for(size_t _i_ = ((size_t)(offset)); _i_ < ((size_t)(offset)) + ((size_t)(listsize)); _i_++) DEBUG(_i_, ((uint32_t*)(list)[_i_ - ((size_t)(offset))]));
-
-#endif

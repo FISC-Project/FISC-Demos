@@ -57,11 +57,10 @@ void video_test()
 void start()
 {
 	welcome();
-	puts("\nAvailable Options:\nq- Quit\n\n");
+	printf("\n> This is demo # 1\n");
 
 	while(1) {
-		if(!video_is_enabled())
-			break;
+		if(!video_is_enabled()) break;
 
 		video_test();
 

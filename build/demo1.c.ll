@@ -1,4 +1,4 @@
-; ModuleID = 'llvm-link'
+; ModuleID = 'testbench\c\demo1.c'
 target datalayout = "E-p:64:64:64-i1:8:64-i8:8:64-i16:16:64-i32:32:64-f64:64-a:0:64-n64"
 target triple = "fisc-unknown-unknown"
 
@@ -9,11 +9,10 @@ target triple = "fisc-unknown-unknown"
 %struct.rgbpack_t = type { %struct.rgb_t, %struct.rgb_t }
 %struct.rgb_t = type { i8, i8, i8, i8 }
 
-@alloc_head = global i32 131072, section ".data", align 4
 @.str = private unnamed_addr global [7 x i8] c"(null)\00", align 1
-@.str.9 = private unnamed_addr global [17 x i8] c"0123456789abcdef\00", align 1
 @io = internal global %struct.IO* inttoptr (i64 20480 to %struct.IO*), section ".data", align 4
 @__printf_buff__ = internal global [256 x i8] zeroinitializer, section ".data", align 1
+@alloc_head = global i32 131072, section ".data", align 4
 @video_render_counter = internal global i32 0, section ".data", align 4
 @.str.1 = private unnamed_addr global [58 x i8] c"\0A________________________________________________________\00", align 1
 @.str.2 = private unnamed_addr global [45 x i8] c"\0A\0A            W E L C O M E    T O    T H E \00", align 1
@@ -22,22 +21,12 @@ target triple = "fisc-unknown-unknown"
 @.str.5 = private unnamed_addr global [3 x i8] c"\0A\0A\00", align 1
 @.str.6 = private unnamed_addr global [39 x i8] c"\0A\0A> Closing the FISC CPU ...\0A> Goodbye\00", align 1
 @.str.7 = private unnamed_addr global [2 x i8] c"\0A\00", align 1
-@video_test.video_colorinfo = internal global i64 0, section ".data", align 8
-@video_test.video_y = internal global i16 0, section ".data", align 2
 @video_test.video_x = internal global i16 0, section ".data", align 2
+@video_test.video_y = internal global i16 0, section ".data", align 2
+@video_test.video_colorinfo = internal global i64 0, section ".data", align 8
 @video_test.inc = internal global i8 0, section ".data", align 1
 @.str.8 = private unnamed_addr global [21 x i8] c"\0A> This is demo # 1\0A\00", align 1
-
-; Function Attrs: nounwind
-define i32 @main(i32 %argc, i8** %argv) #0 {
-  %1 = alloca i32, align 4
-  %2 = alloca i8**, align 4
-  store i32 %argc, i32* %1, align 4
-  store i8** %argv, i8*** %2, align 4
-  call void @start() #2
-  call void asm sideeffect "bl 0", ""() #1, !srcloc !1
-  ret i32 0
-}
+@.str.9 = private unnamed_addr global [17 x i8] c"0123456789abcdef\00", align 1
 
 ; Function Attrs: nounwind
 define i32 @strlen(i8* %str) #0 {
@@ -1242,7 +1231,7 @@ define void @start() #0 {
   %1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.str.8, i32 0, i32 0)) #2
   br label %2
 
-; <label>:2                                       ; preds = %17, %0
+; <label>:2                                       ; preds = %0, %17
   %3 = call signext i8 @video_is_enabled() #2
   %4 = icmp ne i8 %3, 0
   br i1 %4, label %6, label %5
@@ -1284,7 +1273,6 @@ attributes #0 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="fa
 attributes #1 = { nounwind }
 attributes #2 = { nobuiltin }
 
-!llvm.ident = !{!0, !0}
+!llvm.ident = !{!0}
 
 !0 = !{!"clang version 3.8.1 "}
-!1 = !{i32 -2147473924}
